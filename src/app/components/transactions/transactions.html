@@ -1,0 +1,23 @@
+<div class="form-container">
+  <h1>Storico Transazioni</h1>
+  <p>Filtra le tue transazioni.</p>
+  <form (ngSubmit)="onSubmit()" class="account-form">
+    <label for="filter">Filtro:</label>
+    <input
+      type="text"
+      id="filter"
+      [(ngModel)]="filter"
+      name="filter"
+      placeholder="Cerca per descrizione"
+    />
+    <button type="submit">Applica Filtro</button>
+  </form>
+  <div class="transactions-list">
+    <h2>Transazioni</h2>
+    <ul>
+      <li *ngFor="let t of filteredTransactions">
+        {{ t.date }} - {{ t.description }}: €{{ t.amount }}
+      </li>
+    </ul>
+  </div>
+</div>

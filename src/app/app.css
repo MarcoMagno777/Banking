@@ -1,0 +1,31 @@
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+app-navbar {
+  width: 280px; /* Increased width */
+  /* Removed gray background and padding to let navbar.css handle it */
+}
+
+main {
+  flex: 1;
+  padding: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  app-navbar {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+  }
+
+  main {
+    flex: 1;
+  }
+}
