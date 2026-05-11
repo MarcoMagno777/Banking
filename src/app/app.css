@@ -11,21 +11,27 @@ app-navbar {
 main {
   flex: 1;
   padding: 1rem;
+  overflow-y: auto;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .app-container {
     flex-direction: column;
+    height: auto;
+    min-height: 100vh;
   }
 
   app-navbar {
     width: 100%;
     height: auto;
     border-radius: 0;
+    order: -1; /* Metti la navbar in alto */
   }
 
   main {
     flex: 1;
+    padding: 1rem;
+    min-height: calc(100vh - auto);
   }
 }

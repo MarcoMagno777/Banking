@@ -1,8 +1,15 @@
 <div class="form-container">
   <h1>Saldo Conto</h1>
   <p>Il tuo saldo attuale è:</p>
-  <div class="balance-display">
-    <span class="balance-amount">€2,500.00</span>
+  <div class="balance-display" *ngIf="account; else emptyAccount">
+    <span class="balance-amount">€{{ account.balance.toFixed(2) }}</span>
+    <div class="total-info">
+      <span>Saldo totale: €{{ totalBalance() }}</span>
+    </div>
   </div>
+  <ng-template #emptyAccount>
+    <p>Conto non trovato.</p>
+  </ng-template>
   <button (click)="refreshBalance()">Aggiorna Saldo</button>
+  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
 </div>

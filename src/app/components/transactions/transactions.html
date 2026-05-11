@@ -8,16 +8,34 @@
       id="filter"
       [(ngModel)]="filter"
       name="filter"
-      placeholder="Cerca per descrizione"
+      placeholder="Cerca per descrizione o tipo"
     />
     <button type="submit">Applica Filtro</button>
   </form>
   <div class="transactions-list">
     <h2>Transazioni</h2>
     <ul>
-      <li *ngFor="let t of filteredTransactions">
-        {{ t.date }} - {{ t.description }}: €{{ t.amount }}
+      <li 
+        *ngFor="let t of filteredTransactions"
+        (click)="selectTransaction(t)"
+        class="transaction-item"
+        [class.positive]="t.amount > 0"
+        [class.negative]="t.amount < 0"
+      >
+        <div class="transaction-info">
+          <span class="date">{{ t.date }}</span>
+          <span class="description">{{ t.description }}</span>
+          <span class="status" [class]="t.status">{{ t.status }}</span>
+        </div>
+        <span class="amount" [class.amount-positive]="t.amount > 0">
+          {{ t.amount > 0 ? '+' : '' }}€{{ getAbsAmount(t.amount) }}
+        </span>
       </li>
     </ul>
   </div>
 </div>
+
+<app-transaction-detail
+  [transaction]="selectedTransaction"
+  (closeDetail)="closeDetail()"
+></app-transaction-detail>

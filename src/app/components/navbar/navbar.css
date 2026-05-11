@@ -9,10 +9,18 @@ nav {
   border-radius: 0 15px 15px 0; /* Rounded right corners */
 }
 
+.navbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+}
+
 header {
   padding: 2rem 1.5rem 1.5rem; /* Increased padding */
   text-align: center;
   border-radius: 0 15px 0 0; /* Rounded top-right */
+  flex: 1;
 }
 
 h2 {
@@ -48,8 +56,69 @@ a {
 
 a:hover {
   background-color: #1a1a1a;
-  color: #ffffff;
-  border-left-color: #38a169; /* Serious green */
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  gap: 6px;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    height: auto;
+    border-radius: 0;
+  }
+
+  .navbar-header {
+    padding: 1rem 0;
+  }
+
+  header {
+    padding: 0.5rem 1.5rem;
+    text-align: left;
+    flex: 0;
+    border-radius: 0;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  ul {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    transition: max-height 0.3s ease;
+  }
+
+  nav.open ul {
+    max-height: 500px;
+    padding: 1rem 0;
+  }
+
+  a {
+    padding: 0.75rem 2rem;
+    font-size: 0.95rem;
+  }
 }
 
 a.active {

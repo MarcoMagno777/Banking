@@ -1,20 +1,62 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { BankingService } from '../../services/banking-service';
 
 @Component({
   selector: 'app-convert-crypto',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './convert-crypto.html',
   styleUrl: './convert-crypto.css',
 })
 export class ConvertCrypto {
+  private bankingService = inject(BankingService);
+
+  description: string = '';
   amount: number = 0;
-  cryptoType: string = 'BTC';
+  fromCurrency: string = 'EUR';
+  toCrypto: string = 'BTC';
+  isLoading = false;
+  statusMessage: string = '';
+
+  cryptos = [
+    { value: 'BTC', label: 'Bitcoin (BTC)', rate: 0.000025 },
+    { value: 'ETH', label: 'Ethereum (ETH)', rate: 0.0005 },
+    { value: 'XRP', label: 'Ripple (XRP)', rate: 0.01 },
+    { value: 'LTC', label: 'Litecoin (LTC)', rate: 0.0001 },
+  ];
+
+  get selectedCryptoRate(): number {
+    const crypto = this.cryptos.find((c) => c.value === this.toCrypto);
+    return crypto?.rate ?? 0;
+  }
+
+  get convertedAmount(): number {
+    return this.amount * this.selectedCryptoRate;
+  }
 
   onSubmit() {
-    if (this.amount > 0) {
-      alert(`Conversione di €${this.amount} in ${this.cryptoType} effettuata!`);
-      this.amount = 0;
+    if (this.amount > 0 && this.description.trim()) {
+      this.isLoading = true;
+      
+      // Simula un'operazione asincrona
+      setTimeout(() => {
+        const conversion = this.bankingService.addCryptoConversion(
+          this.amount,
+          this.fromCurrency,
+          this.toCrypto,
+          this.selectedCryptoRate,
+          this.description
+        );
+        
+        // Rimuovi i fondi dal conto
+        this.bankingService.withdrawFundsFromBalance(this.amount);
+
+        this.statusMessage = `Conversione di €${this.amount} in ${this.convertedAmount.toFixed(6)} ${this.toCrypto} effettuata!`;
+        this.description = '';
+        this.amount = 0;
+        this.isLoading = false;
+      }, 1000);
     }
   }
 }

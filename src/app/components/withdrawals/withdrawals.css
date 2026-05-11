@@ -63,3 +63,13 @@ button:disabled {
   background-color: #a0aec0;
   cursor: not-allowed;
 }
+
+.status-message {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  background-color: #e6fffa;
+  border: 1px solid #b2f5ea;
+  border-radius: 6px;
+  color: #2f855a;
+  font-weight: 500;
+}

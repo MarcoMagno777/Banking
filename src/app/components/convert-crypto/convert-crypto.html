@@ -1,7 +1,15 @@
 <div class="form-container">
   <h1>Converti in Criptovaluta</h1>
-  <p>Inserisci l'importo e il tipo di criptovaluta.</p>
+  <p>Inserisci l'importo, la descrizione e il tipo di criptovaluta.</p>
   <form (ngSubmit)="onSubmit()" class="account-form">
+    <label for="description">Descrizione:</label>
+    <input
+      type="text"
+      id="description"
+      [(ngModel)]="description"
+      name="description"
+      placeholder="Es: Acquisto Bitcoin"
+    />
     <label for="amount">Importo (€):</label>
     <input
       type="number"
@@ -14,11 +22,13 @@
       placeholder="Inserisci l'importo"
     />
     <label for="cryptoType">Tipo Cripto:</label>
-    <select id="cryptoType" [(ngModel)]="cryptoType" name="cryptoType">
+    <select id="cryptoType" [(ngModel)]="toCrypto" name="toCrypto">
       <option value="BTC">Bitcoin (BTC)</option>
       <option value="ETH">Ethereum (ETH)</option>
-      <option value="ADA">Cardano (ADA)</option>
+      <option value="XRP">Ripple (XRP)</option>
+      <option value="LTC">Litecoin (LTC)</option>
     </select>
     <button type="submit" [disabled]="amount <= 0">Converti</button>
   </form>
+  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
 </div>

@@ -1,13 +1,23 @@
-<nav>
-  <header>
-    <h2>Secure Banking</h2>
-  </header>
+<nav [class.open]="isMenuOpen()">
+  <div class="navbar-header">
+    <header>
+      <h2>Secure Banking</h2>
+    </header>
+    <button class="hamburger" (click)="toggleMenu()" [attr.aria-label]="isMenuOpen() ? 'Close menu' : 'Open menu'">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
   <ul>
-    <li><a routerLink="/balance" routerLinkActive="active">Account Balance</a></li>
-    <li><a routerLink="/convert-crypto" routerLinkActive="active">Crypto Conversion</a></li>
-    <li><a routerLink="/convert-fiat" routerLinkActive="active">Fiat Conversion</a></li>
-    <li><a routerLink="/deposit" routerLinkActive="active">Deposit Funds</a></li>
-    <li><a routerLink="/transactions" routerLinkActive="active">Transaction History</a></li>
-    <li><a routerLink="/withdrawals" routerLinkActive="active">Withdrawals</a></li>
+    <li><a routerLink="/balance" routerLinkActive="active" (click)="closeMenu()">Account Balance</a></li>
+    <li><a routerLink="/convert-crypto" routerLinkActive="active" (click)="closeMenu()">Crypto Conversion</a></li>
+    <li><a routerLink="/convert-fiat" routerLinkActive="active" (click)="closeMenu()">Fiat Conversion</a></li>
+    <li><a routerLink="/deposit" routerLinkActive="active" (click)="closeMenu()">Deposit Funds</a></li>
+    <li><a routerLink="/transactions" routerLinkActive="active" (click)="closeMenu()">Transaction History</a></li>
+    <li><a routerLink="/withdrawals" routerLinkActive="active" (click)="closeMenu()">Withdrawals</a></li>
+    <li>
+      <app-logout-button (logout)="closeMenu()"></app-logout-button>
+    </li>
   </ul>
 </nav>

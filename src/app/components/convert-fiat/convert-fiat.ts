@@ -1,20 +1,63 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { BankingService } from '../../services/banking-service';
 
 @Component({
   selector: 'app-convert-fiat',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './convert-fiat.html',
   styleUrl: './convert-fiat.css',
 })
 export class ConvertFiat {
+  private bankingService = inject(BankingService);
+
+  description: string = '';
   amount: number = 0;
-  fiatType: string = 'USD';
+  fromCurrency: string = 'EUR';
+  toFiat: string = 'USD';
+  isLoading = false;
+  statusMessage: string = '';
+
+  fiats = [
+    { value: 'USD', label: 'Dollaro USA (USD)', rate: 1.1 },
+    { value: 'GBP', label: 'Sterlina Britannica (GBP)', rate: 0.95 },
+    { value: 'JPY', label: 'Yen Giapponese (JPY)', rate: 160 },
+    { value: 'CAD', label: 'Dollaro Canadese (CAD)', rate: 1.5 },
+    { value: 'AUD', label: 'Dollaro Australiano (AUD)', rate: 1.7 },
+  ];
+
+  get selectedFiatRate(): number {
+    const fiat = this.fiats.find((f) => f.value === this.toFiat);
+    return fiat?.rate ?? 0;
+  }
+
+  get convertedAmount(): number {
+    return this.amount * this.selectedFiatRate;
+  }
 
   onSubmit() {
-    if (this.amount > 0) {
-      alert(`Conversione di €${this.amount} in ${this.fiatType} effettuata!`);
-      this.amount = 0;
+    if (this.amount > 0 && this.description.trim()) {
+      this.isLoading = true;
+      
+      // Simula un'operazione asincrona
+      setTimeout(() => {
+        const conversion = this.bankingService.addFiatConversion(
+          this.amount,
+          this.fromCurrency,
+          this.toFiat,
+          this.selectedFiatRate,
+          this.description
+        );
+        
+        // Rimuovi i fondi dal conto
+        this.bankingService.withdrawFundsFromBalance(this.amount);
+
+        this.statusMessage = `Conversione di €${this.amount} in ${this.convertedAmount.toFixed(2)} ${this.toFiat} effettuata!`;
+        this.description = '';
+        this.amount = 0;
+        this.isLoading = false;
+      }, 1000);
     }
   }
 }

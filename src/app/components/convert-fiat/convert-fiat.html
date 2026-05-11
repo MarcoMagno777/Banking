@@ -1,7 +1,15 @@
 <div class="form-container">
   <h1>Converti in Valuta Fiat</h1>
-  <p>Inserisci l'importo e il tipo di valuta.</p>
+  <p>Inserisci l'importo, la descrizione e il tipo di valuta.</p>
   <form (ngSubmit)="onSubmit()" class="account-form">
+    <label for="description">Descrizione:</label>
+    <input
+      type="text"
+      id="description"
+      [(ngModel)]="description"
+      name="description"
+      placeholder="Es: Cambio Euro in Dollari"
+    />
     <label for="amount">Importo (€):</label>
     <input
       type="number"
@@ -14,11 +22,14 @@
       placeholder="Inserisci l'importo"
     />
     <label for="fiatType">Tipo Valuta:</label>
-    <select id="fiatType" [(ngModel)]="fiatType" name="fiatType">
+    <select id="fiatType" [(ngModel)]="toFiat" name="toFiat">
       <option value="USD">Dollaro USA (USD)</option>
-      <option value="GBP">Sterlina (GBP)</option>
-      <option value="JPY">Yen (JPY)</option>
+      <option value="GBP">Sterlina Britannica (GBP)</option>
+      <option value="JPY">Yen Giapponese (JPY)</option>
+      <option value="CAD">Dollaro Canadese (CAD)</option>
+      <option value="AUD">Dollaro Australiano (AUD)</option>
     </select>
     <button type="submit" [disabled]="amount <= 0">Converti</button>
   </form>
+  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
 </div>

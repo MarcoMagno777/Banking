@@ -1,0 +1,33 @@
+<div class="modal-overlay" (click)="close()" *ngIf="transaction">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="close()" aria-label="Chiudi dettagli">×</button>
+    
+    <h2>Dettagli Transazione</h2>
+    
+    <div class="detail-grid">
+      <div class="detail-row">
+        <span class="label">Data:</span>
+        <span class="value">{{ transaction.date }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <span class="label">Descrizione:</span>
+        <span class="value">{{ transaction.description }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <span class="label">Tipo:</span>
+        <span class="value" [class]="amountClass">{{ transactionType }}</span>
+      </div>
+      
+      <div class="detail-row amount-row">
+        <span class="label">Importo:</span>
+        <span class="value amount" [class]="amountClass">
+          {{ transaction.amount > 0 ? '+' : '' }}€{{ getAbsAmount() }}
+        </span>
+      </div>
+    </div>
+    
+    <button class="close-detail-btn" (click)="close()">Chiudi</button>
+  </div>
+</div>

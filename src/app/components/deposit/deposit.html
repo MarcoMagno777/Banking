@@ -1,7 +1,15 @@
 <div class="form-container">
   <h1>Deposita Fondi</h1>
-  <p>Inserisci l'importo da depositare.</p>
+  <p>Inserisci l'importo e la descrizione del deposito.</p>
   <form (ngSubmit)="onSubmit()" class="account-form">
+    <label for="description">Descrizione:</label>
+    <input
+      type="text"
+      id="description"
+      [(ngModel)]="description"
+      name="description"
+      placeholder="Es: Deposito presso banca XYZ"
+    />
     <label for="amount">Importo (€):</label>
     <input
       type="number"
@@ -15,4 +23,5 @@
     />
     <button type="submit" [disabled]="amount <= 0">Deposita</button>
   </form>
+  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
 </div>
