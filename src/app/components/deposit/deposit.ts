@@ -27,23 +27,20 @@ export class Deposit {
   onSubmit() {
     if (this.amount > 0 && this.description.trim()) {
       this.isLoading = true;
-      
-      // Simula un'operazione asincrona
-      setTimeout(() => {
-        const deposit = this.bankingService.addDeposit(
-          this.amount,
-          this.method,
-          this.description
-        );
-        
-        // Aggiungi i fondi al conto
-        this.bankingService.addFundsToBalance(this.amount);
-
-        this.statusMessage = `Deposito di €${this.amount} in corso via ${this.method}!`;
-        this.description = '';
-        this.amount = 0;
-        this.isLoading = false;
-      }, 1000);
+      this.bankingService
+        .addDeposit(this.amount, this.method, this.description)
+        .subscribe({
+          next: () => {
+            this.statusMessage = `Deposito di €${this.amount} inviato al server.`;
+            this.description = '';
+            this.amount = 0;
+            this.isLoading = false;
+          },
+          error: () => {
+            this.statusMessage = 'Errore durante il deposito.';
+            this.isLoading = false;
+          },
+        });
     }
   }
 }

@@ -39,25 +39,26 @@ export class ConvertFiat {
   onSubmit() {
     if (this.amount > 0 && this.description.trim()) {
       this.isLoading = true;
-      
-      // Simula un'operazione asincrona
-      setTimeout(() => {
-        const conversion = this.bankingService.addFiatConversion(
+      this.bankingService
+        .addFiatConversion(
           this.amount,
           this.fromCurrency,
           this.toFiat,
           this.selectedFiatRate,
           this.description
-        );
-        
-        // Rimuovi i fondi dal conto
-        this.bankingService.withdrawFundsFromBalance(this.amount);
-
-        this.statusMessage = `Conversione di €${this.amount} in ${this.convertedAmount.toFixed(2)} ${this.toFiat} effettuata!`;
-        this.description = '';
-        this.amount = 0;
-        this.isLoading = false;
-      }, 1000);
+        )
+        .subscribe({
+          next: () => {
+            this.statusMessage = `Conversione in ${this.toFiat} inviata al server.`;
+            this.description = '';
+            this.amount = 0;
+            this.isLoading = false;
+          },
+          error: () => {
+            this.statusMessage = 'Errore durante la conversione fiat.';
+            this.isLoading = false;
+          },
+        });
     }
   }
 }

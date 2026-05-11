@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BankingService } from '../../services/banking-service';
+import { Account } from '../../models/banking.model';
 
 @Component({
   selector: 'app-balance',
@@ -8,24 +9,33 @@ import { BankingService } from '../../services/banking-service';
   templateUrl: './balance.html',
   styleUrl: './balance.css',
 })
-export class Balance {
+export class Balance implements OnInit {
   private bankingService = inject(BankingService);
+  account: Account | null = null;
+  isLoading = false;
 
-  get primaryAccount() {
-    return this.bankingService.getPrimaryAccount();
+  ngOnInit(): void {
+    this.refreshBalance();
   }
 
-  get totalBalance() {
-    return this.bankingService.totalBalance;
-  }
-
-  get account() {
-    return this.bankingService.getAccount();
+  totalBalance(): number {
+    return this.account?.balance ?? 0;
   }
 
   statusMessage = '';
 
   refreshBalance() {
-    this.statusMessage = 'Saldo aggiornato!';
+    this.isLoading = true;
+    this.bankingService.fetchAccount().subscribe({
+      next: (account) => {
+        this.account = account;
+        this.statusMessage = 'Saldo aggiornato dal server.';
+        this.isLoading = false;
+      },
+      error: () => {
+        this.statusMessage = 'Errore nel recupero del saldo.';
+        this.isLoading = false;
+      },
+    });
   }
 }

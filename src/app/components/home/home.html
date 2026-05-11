@@ -13,4 +13,5 @@
     />
     <button type="submit" [disabled]="!accountNumber.trim()">Accedi al Conto</button>
   </form>
+  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
 </div>

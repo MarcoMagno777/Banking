@@ -38,25 +38,26 @@ export class ConvertCrypto {
   onSubmit() {
     if (this.amount > 0 && this.description.trim()) {
       this.isLoading = true;
-      
-      // Simula un'operazione asincrona
-      setTimeout(() => {
-        const conversion = this.bankingService.addCryptoConversion(
+      this.bankingService
+        .addCryptoConversion(
           this.amount,
           this.fromCurrency,
           this.toCrypto,
           this.selectedCryptoRate,
           this.description
-        );
-        
-        // Rimuovi i fondi dal conto
-        this.bankingService.withdrawFundsFromBalance(this.amount);
-
-        this.statusMessage = `Conversione di €${this.amount} in ${this.convertedAmount.toFixed(6)} ${this.toCrypto} effettuata!`;
-        this.description = '';
-        this.amount = 0;
-        this.isLoading = false;
-      }, 1000);
+        )
+        .subscribe({
+          next: () => {
+            this.statusMessage = `Conversione in ${this.toCrypto} inviata al server.`;
+            this.description = '';
+            this.amount = 0;
+            this.isLoading = false;
+          },
+          error: () => {
+            this.statusMessage = 'Errore durante la conversione crypto.';
+            this.isLoading = false;
+          },
+        });
     }
   }
 }
