@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LogoutButton } from '../logout-button/logout-button';
+import { BankingService } from '../../services/banking-service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,6 +12,7 @@ import { LogoutButton } from '../logout-button/logout-button';
 })
 export class Navbar {
   isMenuOpen = signal(false);
+  constructor(private readonly bankingService: BankingService) {}
 
   toggleMenu() {
     this.isMenuOpen.update(value => !value);
@@ -18,5 +20,10 @@ export class Navbar {
 
   closeMenu() {
     this.isMenuOpen.set(false);
+  }
+
+  handleLogout(): void {
+    this.bankingService.clearSession();
+    this.closeMenu();
   }
 }

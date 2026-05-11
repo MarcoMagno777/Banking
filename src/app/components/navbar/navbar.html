@@ -10,6 +10,7 @@
     </button>
   </div>
   <ul>
+    <li><a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">Home Overview</a></li>
     <li><a routerLink="/balance" routerLinkActive="active" (click)="closeMenu()">Account Balance</a></li>
     <li><a routerLink="/convert-crypto" routerLinkActive="active" (click)="closeMenu()">Crypto Conversion</a></li>
     <li><a routerLink="/convert-fiat" routerLinkActive="active" (click)="closeMenu()">Fiat Conversion</a></li>
@@ -17,7 +18,7 @@
     <li><a routerLink="/transactions" routerLinkActive="active" (click)="closeMenu()">Transaction History</a></li>
     <li><a routerLink="/withdrawals" routerLinkActive="active" (click)="closeMenu()">Withdrawals</a></li>
     <li>
-      <app-logout-button (logout)="closeMenu()"></app-logout-button>
+      <app-logout-button (logout)="handleLogout()"></app-logout-button>
     </li>
   </ul>
 </nav>

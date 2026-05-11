@@ -1,0 +1,29 @@
+<div class="form-container">
+  <section class="intro-card">
+    <h2>La tua banca digitale, semplice e sicura</h2>
+    <p>
+      Secure Banking ti permette di monitorare saldo, movimenti e operazioni principali
+      in un'unica piattaforma, con un'esperienza chiara e professionale.
+    </p>
+  </section>
+
+  <h1>Benvenuto in Secure Banking</h1>
+
+  <div class="content-grid">
+    <form (ngSubmit)="onSubmit()" class="account-form">
+      <label for="accountNumber">Numero conto</label>
+      <input
+        type="text"
+        id="accountNumber"
+        [(ngModel)]="accountNumber"
+        name="accountNumber"
+        required
+        placeholder="Es. 1001"
+      />
+      <button type="submit" [disabled]="!accountNumber.trim()">Accedi</button>
+      <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
+    </form>
+
+    
+  </div>
+</div>

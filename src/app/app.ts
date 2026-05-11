@@ -19,7 +19,7 @@ export class App implements OnInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.showNavbar.set(event.url !== '/home');
+      this.showNavbar.set(event.url !== '/login');
     });
   }
 }
