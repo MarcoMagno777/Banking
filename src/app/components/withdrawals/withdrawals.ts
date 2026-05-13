@@ -1,16 +1,17 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { BankingService } from '../../services/banking-service';
 
 @Component({
   selector: 'app-withdrawals',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './withdrawals.html',
   styleUrl: './withdrawals.css',
 })
-export class Withdrawals implements OnInit {
-  private bankingService = inject(BankingService);
+export class Withdrawals {
+  protected readonly banking = inject(BankingService);
 
   description: string = '';
   amount: number = 0;
@@ -25,21 +26,13 @@ export class Withdrawals implements OnInit {
   ];
 
   get maxWithdrawal(): number {
-    return this.bankingService.getCachedAccount()?.balance ?? 0;
-  }
-
-  ngOnInit(): void {
-    this.bankingService.fetchAccount().subscribe({
-      error: () => {
-        this.statusMessage = 'Impossibile caricare il saldo disponibile.';
-      },
-    });
+    return this.banking.getCachedAccount()?.balance ?? 0;
   }
 
   onSubmit() {
     if (this.amount > 0 && this.amount <= this.maxWithdrawal && this.description.trim()) {
       this.isLoading = true;
-      this.bankingService
+      this.banking
         .addWithdrawal(this.amount, this.destination, this.description)
         .subscribe({
           next: () => {

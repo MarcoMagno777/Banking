@@ -1,90 +1,121 @@
-<div class="form-container">
-  <header class="dashboard-header">
+<div class="bank-page home-rev">
+  <header class="bank-page-header">
     <div>
-      <p class="eyebrow">Panoramica conto</p>
-      <h1>Benvenuto, conto #{{ accountNumber }}</h1>
-      <p class="subtitle">Vista sintetica dei dati principali del tuo home banking.</p>
+      <p class="bank-eyebrow">Panoramica conto</p>
+      <h1 class="bank-title">Ciao, conto #{{ accountNumber }}</h1>
+      <p class="bank-subtitle">
+        Saldo, cashflow e movimenti in un’unica vista — stile pulito come le app banking moderne.
+      </p>
     </div>
-    <button class="refresh" (click)="loadOverview()">Aggiorna dati</button>
+    <button type="button" class="bank-btn bank-btn-ghost" (click)="loadOverview()">Aggiorna</button>
   </header>
 
-  <section class="kpi-grid" *ngIf="!isLoading && account; else loadingOrError">
-    <article class="kpi-card">
-      <h3>Saldo disponibile</h3>
-      <p class="value">EUR {{ account.balance.toFixed(2) }}</p>
-    </article>
-    <article class="kpi-card">
-      <h3>Totale entrate</h3>
-      <p class="value positive">EUR {{ totalIncome.toFixed(2) }}</p>
-    </article>
-    <article class="kpi-card">
-      <h3>Totale uscite</h3>
-      <p class="value negative">EUR {{ totalExpenses.toFixed(2) }}</p>
-    </article>
-    <article class="kpi-card">
-      <h3>Cashflow netto</h3>
-      <p class="value" [class.positive]="netCashflowDirection === 'up'" [class.negative]="netCashflowDirection === 'down'">
-        {{ netCashflowDirection === 'up' ? '+' : '-' }}EUR {{ absNetCashflow.toFixed(2) }}
+  <ng-container *ngIf="account; else loadingOrError">
+    <section class="hero-balance bank-card">
+      <div class="hero-top">
+        <span class="pill">Disponibile</span>
+        <span class="hero-currency">EUR</span>
+      </div>
+      <p class="hero-amount">
+        {{ account.balance.toFixed(2) }}
       </p>
-    </article>
-  </section>
-
-  <section class="actions">
-    <a routerLink="/deposit" class="action">Nuovo deposito</a>
-    <a routerLink="/withdrawals" class="action">Nuovo prelievo</a>
-    <a routerLink="/transactions" class="action">Storico movimenti</a>
-    <a routerLink="/balance" class="action">Dettaglio saldo</a>
-  </section>
-
-  <section class="overview-grid">
-    <article class="recent">
-      <h2>Movimenti recenti</h2>
-      <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
-      <ul *ngIf="recentTransactions.length > 0; else noTransactions">
-        <li *ngFor="let tx of recentTransactions">
-          <div>
-            <strong>{{ tx.description }}</strong>
-            <p>{{ tx.date }} - {{ tx.type }}</p>
-          </div>
-          <span [class.positive]="tx.amount > 0" [class.negative]="tx.amount < 0">
-            {{ tx.amount > 0 ? '+' : '' }}EUR {{ absAmount(tx.amount).toFixed(2) }}
+      <div class="hero-meta">
+        <div>
+          <span class="meta-label">Entrate</span>
+          <span class="meta-value positive">+{{ totalIncome.toFixed(2) }}</span>
+        </div>
+        <div>
+          <span class="meta-label">Uscite</span>
+          <span class="meta-value negative">-{{ totalExpenses.toFixed(2) }}</span>
+        </div>
+        <div>
+          <span class="meta-label">Netto</span>
+          <span class="meta-value" [class.positive]="netCashflowDirection === 'up'" [class.negative]="netCashflowDirection === 'down'">
+            {{ netCashflowDirection === 'up' ? '+' : '-' }}{{ absNetCashflow.toFixed(2) }}
           </span>
-        </li>
-      </ul>
-    </article>
+        </div>
+      </div>
+    </section>
 
-    <article class="summary-card">
-      <h2>Riepilogo operativo</h2>
-      <div class="summary-row">
-        <span>Movimenti totali</span>
-        <strong>{{ transactionCount }}</strong>
-      </div>
-      <div class="summary-row">
-        <span>Depositi registrati</span>
-        <strong>{{ depositCount }}</strong>
-      </div>
-      <div class="summary-row">
-        <span>Prelievi registrati</span>
-        <strong>{{ withdrawalCount }}</strong>
-      </div>
-      <div class="summary-row">
-        <span>Saldo corrente</span>
-        <strong *ngIf="account">EUR {{ account.balance.toFixed(2) }}</strong>
-      </div>
-      <p class="summary-note">
-        Monitora l'andamento del conto e usa le azioni rapide per operare in pochi click.
-      </p>
-    </article>
-  </section>
+    <app-movements-chart
+      class="chart-block"
+      [transactions]="transactions"
+      [currentBalance]="account.balance"
+    />
+
+    <section class="quick-actions">
+      <a routerLink="/deposit" class="qa-card bank-card">
+        <span class="qa-icon">↓</span>
+        <span class="qa-label">Deposita</span>
+      </a>
+      <a routerLink="/withdrawals" class="qa-card bank-card">
+        <span class="qa-icon">↑</span>
+        <span class="qa-label">Preleva</span>
+      </a>
+      <a routerLink="/transactions" class="qa-card bank-card">
+        <span class="qa-icon">≡</span>
+        <span class="qa-label">Movimenti</span>
+      </a>
+      <a routerLink="/balance" class="qa-card bank-card">
+        <span class="qa-icon">◎</span>
+        <span class="qa-label">Saldo</span>
+      </a>
+    </section>
+
+    <section class="split-panels">
+      <article class="panel bank-card">
+        <div class="panel-head">
+          <h2>Recenti</h2>
+          <a routerLink="/transactions" class="link-all">Tutti</a>
+        </div>
+        <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
+        <ul class="tx-list" *ngIf="recentTransactions.length > 0; else noTransactions">
+          <li
+            *ngFor="let tx of recentTransactions; let i = index"
+            [style.animation-delay]="(i * 45) + 'ms'"
+          >
+            <div class="tx-icon" [class.in]="tx.amount > 0" [class.out]="tx.amount < 0"></div>
+            <div class="tx-body">
+              <strong>{{ tx.description || 'Movimento' }}</strong>
+              <p>{{ tx.date }} · {{ tx.type }}</p>
+            </div>
+            <span class="tx-amt" [class.positive]="tx.amount > 0" [class.negative]="tx.amount < 0">
+              {{ tx.amount > 0 ? '+' : '' }}{{ absAmount(tx.amount).toFixed(2) }} €
+            </span>
+          </li>
+        </ul>
+      </article>
+
+      <article class="panel bank-card summary">
+        <h2>Riepilogo</h2>
+        <div class="summary-rows">
+          <div class="summary-row">
+            <span>Movimenti</span>
+            <strong>{{ transactionCount }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Depositi</span>
+            <strong>{{ depositCount }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Prelievi</span>
+            <strong>{{ withdrawalCount }}</strong>
+          </div>
+        </div>
+        <p class="hint">Passa tra le sezioni: i dati si aggiornano automaticamente.</p>
+      </article>
+    </section>
+  </ng-container>
 
   <ng-template #loadingOrError>
-    <div class="placeholder">
-      <p *ngIf="isLoading">Caricamento dati conto in corso...</p>
-      <p *ngIf="!isLoading && statusMessage">{{ statusMessage }}</p>
+    <div class="placeholder bank-card">
+      <p *ngIf="banking.isDashboardSyncing() && !account" class="shimmer">Caricamento dati conto…</p>
+      <p *ngIf="!banking.isDashboardSyncing() && !account && !statusMessage">Caricamento dati conto…</p>
+      <p *ngIf="statusMessage" class="err">{{ statusMessage }}</p>
     </div>
   </ng-template>
 
   <ng-template #noTransactions>
-    <p class="placeholder">Nessun movimento disponibile per questo conto.</p>
+    <p class="empty-tx">Nessun movimento recente.</p>
   </ng-template>
 </div>

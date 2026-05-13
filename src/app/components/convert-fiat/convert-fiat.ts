@@ -1,16 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { BankingService } from '../../services/banking-service';
 
 @Component({
   selector: 'app-convert-fiat',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './convert-fiat.html',
   styleUrl: './convert-fiat.css',
 })
 export class ConvertFiat {
-  private bankingService = inject(BankingService);
+  protected readonly banking = inject(BankingService);
 
   description: string = '';
   amount: number = 0;
@@ -39,7 +40,7 @@ export class ConvertFiat {
   onSubmit() {
     if (this.amount > 0 && this.description.trim()) {
       this.isLoading = true;
-      this.bankingService
+      this.banking
         .addFiatConversion(
           this.amount,
           this.fromCurrency,

@@ -1,16 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { BankingService } from '../../services/banking-service';
 
 @Component({
   selector: 'app-deposit',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './deposit.html',
   styleUrl: './deposit.css',
 })
 export class Deposit {
-  private bankingService = inject(BankingService);
+  protected readonly banking = inject(BankingService);
 
   description: string = '';
   amount: number = 0;
@@ -27,7 +28,7 @@ export class Deposit {
   onSubmit() {
     if (this.amount > 0 && this.description.trim()) {
       this.isLoading = true;
-      this.bankingService
+      this.banking
         .addDeposit(this.amount, this.method, this.description)
         .subscribe({
           next: () => {

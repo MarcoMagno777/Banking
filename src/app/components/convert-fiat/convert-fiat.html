@@ -1,35 +1,94 @@
-<div class="form-container">
-  <h1>Converti in Valuta Fiat</h1>
-  <p>Inserisci l'importo, la descrizione e il tipo di valuta.</p>
-  <form (ngSubmit)="onSubmit()" class="account-form">
-    <label for="description">Descrizione:</label>
-    <input
-      type="text"
-      id="description"
-      [(ngModel)]="description"
-      name="description"
-      placeholder="Es: Cambio Euro in Dollari"
-    />
-    <label for="amount">Importo (€):</label>
-    <input
-      type="number"
-      id="amount"
-      [(ngModel)]="amount"
-      name="amount"
-      required
-      min="0.01"
-      step="0.01"
-      placeholder="Inserisci l'importo"
-    />
-    <label for="fiatType">Tipo Valuta:</label>
-    <select id="fiatType" [(ngModel)]="toFiat" name="toFiat">
-      <option value="USD">Dollaro USA (USD)</option>
-      <option value="GBP">Sterlina Britannica (GBP)</option>
-      <option value="JPY">Yen Giapponese (JPY)</option>
-      <option value="CAD">Dollaro Canadese (CAD)</option>
-      <option value="AUD">Dollaro Australiano (AUD)</option>
-    </select>
-    <button type="submit" [disabled]="amount <= 0">Converti</button>
-  </form>
-  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
+<div class="bank-page fiat-page">
+  <header class="bank-page-header">
+    <div>
+      <p class="bank-eyebrow">FX</p>
+      <h1 class="bank-title">Conversione valute</h1>
+      <p class="bank-subtitle">
+        Cambia euro in un’altra valuta fiat usando i tassi indicativi. Confronta le coppie nel
+        pannello a destra prima di inviare.
+      </p>
+    </div>
+  </header>
+
+  <div class="fiat-grid">
+    <form (ngSubmit)="onSubmit()" class="op-form bank-card">
+      <h2 class="form-title">Simula cambio</h2>
+      <label class="bank-label" for="description">Descrizione</label>
+      <input
+        class="bank-input"
+        type="text"
+        id="description"
+        [(ngModel)]="description"
+        name="description"
+        placeholder="Es. Viaggio, fornitore estero…"
+      />
+      <label class="bank-label" for="amount">Importo in euro (€)</label>
+      <input
+        class="bank-input"
+        type="number"
+        id="amount"
+        [(ngModel)]="amount"
+        name="amount"
+        required
+        min="0.01"
+        step="0.01"
+        placeholder="0.00"
+      />
+      <label class="bank-label" for="fiatType">Valuta di destinazione</label>
+      <select class="bank-select" id="fiatType" [(ngModel)]="toFiat" name="toFiat">
+        @for (f of fiats; track f.value) {
+          <option [value]="f.value">{{ f.label }}</option>
+        }
+      </select>
+      <div class="preview bank-card subtle" *ngIf="amount > 0">
+        <span>Risultato stimato</span>
+        <strong>{{ convertedAmount.toFixed(2) }} {{ toFiat }}</strong>
+        <small>1 EUR × tasso {{ selectedFiatRate }} (indicativo)</small>
+      </div>
+      <button type="submit" class="bank-btn full" [disabled]="amount <= 0 || isLoading">
+        {{ isLoading ? 'Elaborazione…' : 'Converti' }}
+      </button>
+      <div class="banner" *ngIf="statusMessage">{{ statusMessage }}</div>
+    </form>
+
+    <div class="fiat-right">
+      <aside class="rates-panel bank-card">
+        <h3>Tassi indicativi</h3>
+        <p class="muted">Valori dimostrativi: confronta le coppie prima di confermare.</p>
+        <ul>
+          @for (f of fiats; track f.value) {
+            <li [class.active]="f.value === toFiat">
+              <span>{{ f.value }}</span>
+              <span class="rate">{{ f.rate }}</span>
+            </li>
+          }
+        </ul>
+        <div class="info-note">
+          I tassi reali sui mercati FX cambiano ogni secondo; in produzione andrebbero presi da un
+          feed aggiornato.
+        </div>
+      </aside>
+
+      <div class="info-panel bank-card">
+        <h3>Saldo e riferimenti</h3>
+        <p *ngIf="banking.getCachedAccount() as acc" class="bal-line">
+          Disponibile: <strong>{{ acc.balance.toFixed(2) }} {{ acc.currency }}</strong>
+        </p>
+        <p *ngIf="!banking.getCachedAccount()">Effettua l’accesso per il saldo.</p>
+        <div class="info-links">
+          <a routerLink="/balance">Saldo</a>
+          <a routerLink="/home">Panoramica</a>
+          <a routerLink="/convert-crypto">Crypto</a>
+        </div>
+      </div>
+
+      <div class="info-panel bank-card">
+        <h3>Spread e arrotondamenti</h3>
+        <ul>
+          <li>Importi mostrati con 2 decimali salvo valute con più cifre (es. JPY).</li>
+          <li>La banca può applicare spread diversi per canale (online vs filiale).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>

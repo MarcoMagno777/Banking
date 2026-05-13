@@ -1,57 +1,47 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { MovementsChart } from '../../shared/movements-chart/movements-chart';
 import { BankingService } from '../../services/banking-service';
 import { Account, Transaction } from '../../models/banking.model';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MovementsChart],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  account: Account | null = null;
-  transactions: Transaction[] = [];
-  isLoading = false;
+  private readonly router = inject(Router);
+  protected readonly banking = inject(BankingService);
   statusMessage = '';
 
-  constructor(
-    private readonly router: Router,
-    private readonly bankingService: BankingService
-  ) {}
-
   ngOnInit(): void {
-    if (!this.bankingService.getCurrentAccountNumber()) {
+    if (!this.banking.getCurrentAccountNumber()) {
       this.router.navigate(['/login']);
       return;
     }
-
-    this.loadOverview();
   }
 
   loadOverview(): void {
-    this.isLoading = true;
-    forkJoin({
-      account: this.bankingService.fetchAccount(),
-      transactions: this.bankingService.fetchTransactions(),
-    }).subscribe({
-      next: ({ account, transactions }) => {
-        this.account = account;
-        this.transactions = transactions;
-        this.statusMessage = '';
-        this.isLoading = false;
-      },
+    this.statusMessage = '';
+    this.banking.refreshDashboardData().subscribe({
       error: () => {
         this.statusMessage = 'Errore nel caricamento della panoramica conto.';
-        this.isLoading = false;
       },
     });
   }
 
   get accountNumber(): string {
-    return this.bankingService.getCurrentAccountNumber() ?? '-';
+    return this.banking.getCurrentAccountNumber() ?? '-';
+  }
+
+  get account(): Account | null {
+    return this.banking.getCachedAccount();
+  }
+
+  get transactions(): Transaction[] {
+    return this.banking.getCachedTransactions();
   }
 
   get recentTransactions(): Transaction[] {

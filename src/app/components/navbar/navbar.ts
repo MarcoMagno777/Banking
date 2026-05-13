@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LogoutButton } from '../logout-button/logout-button';
 import { BankingService } from '../../services/banking-service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,6 +13,7 @@ import { BankingService } from '../../services/banking-service';
 })
 export class Navbar {
   isMenuOpen = signal(false);
+  protected readonly theme = inject(ThemeService);
   constructor(private readonly bankingService: BankingService) {}
 
   toggleMenu() {

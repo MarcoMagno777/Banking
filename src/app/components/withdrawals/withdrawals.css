@@ -1,75 +1,93 @@
-.form-container {
+.withdrawal-page {
+  max-width: 1180px;
+}
+
+.form-section-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.field-hint {
+  margin: -0.15rem 0 0.35rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--muted-2);
+}
+
+.limit-pill {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f7fafc;
-  color: #2d3748;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.4s ease both;
 }
 
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  color: #1a365d;
+.limit-pill.warn {
+  border-color: rgba(251, 113, 133, 0.35);
+  background: var(--danger-soft);
 }
 
-p {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  text-align: center;
+.limit-pill.warn a {
+  font-weight: 700;
+  color: var(--danger);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.account-form {
+.lim-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lim-hint {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: var(--muted-2);
+}
+
+.limit-pill strong {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.op-form {
+  padding: 1.6rem 1.65rem;
   display: flex;
   flex-direction: column;
-  width: 300px;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 0.55rem;
+  animation: fadeInUp 0.45s ease both;
 }
 
-label {
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+.aside-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-input {
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
-  font-size: 1rem;
+.full {
+  width: 100%;
+  margin-top: 0.35rem;
 }
 
-button {
-  padding: 0.75rem;
-  background-color: #2f855a;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-button:hover:not(:disabled) {
-  background-color: #38a169;
-}
-
-button:disabled {
-  background-color: #a0aec0;
-  cursor: not-allowed;
-}
-
-.status-message {
-  margin-top: 1rem;
+.banner {
+  margin-top: 0.5rem;
   padding: 0.85rem 1rem;
-  background-color: #e6fffa;
-  border: 1px solid #b2f5ea;
-  border-radius: 6px;
-  color: #2f855a;
-  font-weight: 500;
+  border-radius: var(--radius-sm);
+  background: var(--success-banner);
+  border: 1px solid var(--success-banner-border);
+  color: var(--success-text);
+  font-size: 0.88rem;
+  font-weight: 600;
 }

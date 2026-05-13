@@ -1,27 +1,97 @@
-<div class="form-container">
-  <h1>Preleva Fondi</h1>
-  <p>Inserisci l'importo e la descrizione del prelievo.</p>
-  <form (ngSubmit)="onSubmit()" class="account-form">
-    <label for="description">Descrizione:</label>
-    <input
-      type="text"
-      id="description"
-      [(ngModel)]="description"
-      name="description"
-      placeholder="Es: Prelievo bancomat"
-    />
-    <label for="amount">Importo (€):</label>
-    <input
-      type="number"
-      id="amount"
-      [(ngModel)]="amount"
-      name="amount"
-      required
-      min="0.01"
-      step="0.01"
-      placeholder="Inserisci l'importo"
-    />
-    <button type="submit" [disabled]="amount <= 0">Preleva</button>
-  </form>
-  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
+<div class="bank-page withdrawal-page">
+  <header class="bank-page-header">
+    <div>
+      <p class="bank-eyebrow">Cash out</p>
+      <h1 class="bank-title">Prelievo dal conto</h1>
+      <p class="bank-subtitle">
+        Trasferisci liquidità verso bancomat, altro conto o bonifico. L’importo non può superare il
+        disponibile mostrato qui sotto.
+      </p>
+    </div>
+  </header>
+
+  <div class="limit-pill bank-card" *ngIf="maxWithdrawal > 0">
+    <div>
+      <span class="lim-label">Disponibile per il prelievo</span>
+      <span class="lim-hint">Saldo aggiornato dall’ultimo sync</span>
+    </div>
+    <strong>€{{ maxWithdrawal.toFixed(2) }}</strong>
+  </div>
+  <div class="limit-pill bank-card warn" *ngIf="maxWithdrawal <= 0">
+    <span>Saldo insufficiente o conto non caricato.</span>
+    <a routerLink="/deposit">Effettua un deposito</a>
+  </div>
+
+  <div class="op-two-col">
+    <form (ngSubmit)="onSubmit()" class="op-form bank-card">
+      <h2 class="form-section-title">Dati prelievo</h2>
+      <label class="bank-label" for="description">Motivo / descrizione</label>
+      <input
+        class="bank-input"
+        type="text"
+        id="description"
+        [(ngModel)]="description"
+        name="description"
+        placeholder="Es. Prelievo ATM centro, bonifico verso…"
+      />
+      <label class="bank-label" for="amount">Importo (€)</label>
+      <input
+        class="bank-input"
+        type="number"
+        id="amount"
+        [(ngModel)]="amount"
+        name="amount"
+        required
+        min="0.01"
+        step="0.01"
+        placeholder="0.00"
+      />
+      <label class="bank-label" for="destination">Destinazione</label>
+      <select class="bank-select" id="destination" [(ngModel)]="destination" name="destination">
+        @for (d of destinations; track d.value) {
+          <option [value]="d.value">{{ d.label }}</option>
+        }
+      </select>
+      <p class="field-hint">
+        Bancomat: contanti; conto esterno / bonifico: accredito su altro IBAN (simulazione in
+        questa demo).
+      </p>
+      <button type="submit" class="bank-btn full" [disabled]="amount <= 0 || isLoading">
+        {{ isLoading ? 'Invio…' : 'Conferma prelievo' }}
+      </button>
+      <div class="banner" *ngIf="statusMessage">{{ statusMessage }}</div>
+    </form>
+
+    <aside class="aside-stack">
+      <div class="info-panel bank-card">
+        <h3>Controllo importo</h3>
+        <p>
+          Se inserisci un importo superiore al saldo, l’operazione viene bloccata prima
+          dell’invio.
+        </p>
+        <div class="info-stat">
+          <span>Massimo prelevabile ora</span>
+          <strong>€{{ maxWithdrawal.toFixed(2) }}</strong>
+        </div>
+      </div>
+
+      <div class="info-panel bank-card">
+        <h3>Dopo il prelievo</h3>
+        <ul>
+          <li>Saldo e lista movimenti si aggiornano con la navigazione o il pulsante aggiorna.</li>
+          <li>Conserva la descrizione: aiuta a riconoscere il movimento nello storico.</li>
+        </ul>
+      </div>
+
+      <div class="info-panel bank-card">
+        <h3>Link utili</h3>
+        <div class="info-links">
+          <a routerLink="/balance">Saldo</a>
+          <a routerLink="/transactions">Movimenti</a>
+          <a routerLink="/deposit">Deposita</a>
+        </div>
+        <div class="info-note">In produzione potresti aggiungere OTP o conferma push prima dell’esecuzione.</div>
+      </div>
+    </aside>
+  </div>
 </div>

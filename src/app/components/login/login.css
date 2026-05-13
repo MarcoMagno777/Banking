@@ -1,136 +1,150 @@
-.form-container {
+.login-layout {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #f7fafc;
-  color: #2d3748;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 2rem 1rem;
+  padding: 4rem 1.25rem 2rem;
+  position: relative;
+  box-sizing: border-box;
+  animation: bankPageIn 0.55s ease both;
 }
 
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  color: #1a365d;
+.theme-fab-login {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 2;
+}
+
+.login-shell {
+  width: min(920px, 100%);
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 1.75rem;
+  align-items: stretch;
+  align-self: center;
+}
+
+.hero-panel {
+  padding: 2.25rem 2.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: center;
+  animation: fadeInUp 0.55s ease both;
 }
 
-.content-grid {
-  width: 100%;
-  max-width: 920px;
+.brand-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1.2rem;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.brand-mark {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.05rem;
+  box-shadow: 0 14px 36px rgba(34, 197, 94, 0.28);
 }
 
-.account-form {
-  width: 100%;
-  max-width: 420px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.brand-copy {
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
 }
 
-label {
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-input {
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+.brand-title {
   font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--text-strong);
 }
 
-input:focus {
-  outline: none;
-  border-color: #2f855a;
-  box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.1);
+.brand-subtitle {
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
-button {
-  padding: 0.75rem;
-  background-color: #2f855a;
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
+.hero-panel h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.65rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+}
+
+.hero-panel p {
+  margin: 1rem auto 0;
+  color: var(--muted);
   font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  line-height: 1.65;
+  max-width: 42ch;
 }
 
-button:hover:not(:disabled) {
-  background-color: #22543d;
+.login-card {
+  padding: 2rem 1.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+  animation: fadeInUp 0.55s 0.08s ease both;
 }
 
-button:disabled {
-  background-color: #a0aec0;
-  cursor: not-allowed;
-}
-
-.info-card {
-  width: 100%;
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 1.6rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.info-card h2 {
-  margin-top: 0;
-  color: #1a365d;
-}
-
-.info-card p {
+.form-header h2 {
   margin: 0;
-  text-align: left;
-  color: #4a5568;
-  line-height: 1.5;
+  font-size: 1.5rem;
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
 }
 
-.intro-card {
+.form-header p {
+  margin: 0.4rem auto 0.75rem;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 0.92rem;
+  max-width: 32ch;
+}
+
+.bank-label {
+  text-align: left;
+}
+.full {
   width: 100%;
-  max-width: 920px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 1.4rem 1.6rem;
-  margin-bottom: 1.2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 0.35rem;
 }
 
-.intro-card h2 {
-  margin: 0 0 0.5rem;
-  color: #1a365d;
-}
-
-.intro-card p {
-  margin: 0;
-  text-align: left;
-  color: #4a5568;
-  line-height: 1.5;
-}
-
-.status-message {
-  margin-top: 1rem;
+.banner-err {
+  margin-top: 0.5rem;
   padding: 0.85rem 1rem;
-  background-color: #fff5f5;
-  border: 1px solid #fed7d7;
-  border-radius: 6px;
-  color: #c53030;
-  font-weight: 500;
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  border: 1px solid rgba(251, 113, 133, 0.35);
+  color: var(--danger);
+  font-size: 0.88rem;
+  font-weight: 600;
 }
 
-@media (max-width: 768px) {
-  h1 {
-    font-size: 2rem;
+@media (max-width: 880px) {
+  .login-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-panel,
+  .login-card {
+    padding: 1.6rem 1.35rem;
   }
 }

@@ -1,15 +1,14 @@
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.2s ease-in;
+  padding: 1rem;
+  animation: fadeIn 0.28s ease;
+  backdrop-filter: blur(8px);
 }
 
 @keyframes fadeIn {
@@ -22,142 +21,138 @@
 }
 
 .modal-content {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  padding: 2rem;
-  max-width: 500px;
-  width: 90%;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow);
+  padding: 1.75rem 1.6rem;
+  max-width: 480px;
+  width: 100%;
   position: relative;
-  animation: slideUp 0.3s ease-out;
+  animation: slideUp 0.34s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes slideUp {
   from {
-    transform: translateY(20px);
+    transform: translateY(16px) scale(0.98);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
 
 .close-btn {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  font-size: 2rem;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: 1.35rem;
   cursor: pointer;
-  color: #718096;
-  transition: color 0.2s ease;
+  color: var(--muted);
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
   padding: 0;
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
 }
 
 .close-btn:hover {
-  color: #2d3748;
+  color: var(--text-strong);
+  background: var(--surface-elevated);
 }
 
 h2 {
-  margin: 0 0 1.5rem 0;
-  color: #1a365d;
-  font-size: 1.5rem;
+  margin: 0 0 1.25rem;
+  color: var(--text-strong);
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
 }
 
 .detail-grid {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .detail-row {
   display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  align-items: center;
+  grid-template-columns: 110px 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+  align-items: start;
 }
 
 .detail-row.amount-row {
   margin-bottom: 0;
   padding-top: 1rem;
-  border-top: 2px solid #e2e8f0;
+  border-top: 1px solid var(--border);
 }
 
 .label {
   font-weight: 600;
-  color: #4a5568;
-  font-size: 0.95rem;
+  color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .value {
-  color: #2d3748;
-  font-size: 1rem;
+  color: var(--text-strong);
+  font-size: 0.95rem;
 }
 
 .value.amount {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .positive {
-  color: #22543d;
+  color: var(--accent);
 }
 
 .negative {
-  color: #742a2a;
+  color: var(--danger);
 }
 
 .neutral {
-  color: #2d3748;
+  color: var(--text-strong);
 }
 
 .close-detail-btn {
   width: 100%;
-  padding: 0.75rem;
-  background-color: #2f855a;
-  color: white;
+  padding: 0.85rem;
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+  color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition:
+    filter 0.2s ease,
+    transform 0.15s ease;
 }
 
 .close-detail-btn:hover {
-  background-color: #22543d;
+  filter: brightness(1.05);
 }
 
 .close-detail-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.99);
 }
 
-/* Mobile responsive */
 @media (max-width: 480px) {
   .modal-content {
-    padding: 1.5rem;
-    width: 95%;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
+    padding: 1.4rem 1.2rem;
   }
 
   .detail-row {
-    grid-template-columns: 80px 1fr;
-    gap: 0.5rem;
-  }
-
-  .close-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 1.5rem;
+    grid-template-columns: 88px 1fr;
   }
 }

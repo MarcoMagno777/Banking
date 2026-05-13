@@ -1,43 +1,27 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TransactionDetail } from '../transaction-detail/transaction-detail';
+import { MovementsChart } from '../../shared/movements-chart/movements-chart';
 import { BankingService } from '../../services/banking-service';
 import { Transaction } from '../../models/banking.model';
 
 @Component({
   selector: 'app-transactions',
-  imports: [FormsModule, CommonModule, TransactionDetail],
+  imports: [FormsModule, CommonModule, TransactionDetail, MovementsChart],
   templateUrl: './transactions.html',
   styleUrl: './transactions.css',
 })
-export class Transactions implements OnInit {
-  private bankingService = inject(BankingService);
-  
+export class Transactions {
+  protected readonly banking = inject(BankingService);
+
   filter: string = '';
   selectedTransaction: Transaction | null = null;
-  allTransactions: Transaction[] = [];
   statusMessage = '';
 
-  ngOnInit(): void {
-    this.loadTransactions();
-  }
-
-  loadTransactions(): void {
-    this.bankingService.fetchTransactions().subscribe({
-      next: (transactions) => {
-        this.allTransactions = transactions;
-        this.statusMessage = '';
-      },
-      error: () => {
-        this.statusMessage = 'Errore nel caricamento delle transazioni.';
-      },
-    });
-  }
-
   get filteredTransactions() {
-    return this.allTransactions.filter((t) =>
-      t.description.toLowerCase().includes(this.filter.toLowerCase()) ||
+    return this.banking.getCachedTransactions().filter((t) =>
+      (t.description ?? '').toLowerCase().includes(this.filter.toLowerCase()) ||
       t.type.toLowerCase().includes(this.filter.toLowerCase())
     );
   }

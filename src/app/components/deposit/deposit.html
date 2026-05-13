@@ -1,27 +1,85 @@
-<div class="form-container">
-  <h1>Deposita Fondi</h1>
-  <p>Inserisci l'importo e la descrizione del deposito.</p>
-  <form (ngSubmit)="onSubmit()" class="account-form">
-    <label for="description">Descrizione:</label>
-    <input
-      type="text"
-      id="description"
-      [(ngModel)]="description"
-      name="description"
-      placeholder="Es: Deposito presso banca XYZ"
-    />
-    <label for="amount">Importo (€):</label>
-    <input
-      type="number"
-      id="amount"
-      [(ngModel)]="amount"
-      name="amount"
-      required
-      min="0.01"
-      step="0.01"
-      placeholder="Inserisci l'importo"
-    />
-    <button type="submit" [disabled]="amount <= 0">Deposita</button>
-  </form>
-  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
+<div class="bank-page deposit-page">
+  <header class="bank-page-header">
+    <div>
+      <p class="bank-eyebrow">Cash in</p>
+      <h1 class="bank-title">Deposito sul conto</h1>
+      <p class="bank-subtitle">
+        Versa fondi con una descrizione chiara: comparirà nello storico insieme a data e importo.
+        Scegli il canale più adatto al tuo caso.
+      </p>
+    </div>
+  </header>
+
+  <div class="op-two-col">
+    <form (ngSubmit)="onSubmit()" class="op-form bank-card">
+      <h2 class="form-section-title">Dati operazione</h2>
+      <label class="bank-label" for="description">Descrizione (obbligatoria)</label>
+      <input
+        class="bank-input"
+        type="text"
+        id="description"
+        [(ngModel)]="description"
+        name="description"
+        placeholder="Es. Bonifico stipendio, rimborso spese…"
+      />
+      <label class="bank-label" for="amount">Importo (€)</label>
+      <input
+        class="bank-input"
+        type="number"
+        id="amount"
+        [(ngModel)]="amount"
+        name="amount"
+        required
+        min="0.01"
+        step="0.01"
+        placeholder="0.00"
+      />
+      <label class="bank-label" for="method">Canale di accredito</label>
+      <select class="bank-select" id="method" [(ngModel)]="method" name="method">
+        @for (m of methods; track m.value) {
+          <option [value]="m.value">{{ m.label }}</option>
+        }
+      </select>
+      <p class="field-hint">Il metodo serve a classificare l’operazione in app; l’accredito effettivo dipende dall’API.</p>
+      <button type="submit" class="bank-btn full" [disabled]="amount <= 0 || isLoading">
+        {{ isLoading ? 'Invio…' : 'Conferma deposito' }}
+      </button>
+      <div class="banner" *ngIf="statusMessage">{{ statusMessage }}</div>
+    </form>
+
+    <aside class="aside-stack">
+      <div class="info-panel bank-card">
+        <h3>Saldo attuale</h3>
+        <p class="big-inline" *ngIf="banking.getCachedAccount() as acc">
+          {{ acc.balance.toFixed(2) }} {{ acc.currency }}
+        </p>
+        <p *ngIf="!banking.getCachedAccount()">Accedi e attendi il sync per vedere il saldo qui.</p>
+        <div class="info-stat">
+          <span>Conto</span>
+          <strong>#{{ banking.getCurrentAccountNumber() ?? '—' }}</strong>
+        </div>
+        <div class="info-links">
+          <a routerLink="/balance">Vai al saldo</a>
+          <a routerLink="/transactions">Storico</a>
+        </div>
+      </div>
+
+      <div class="info-panel bank-card">
+        <h3>Tempi e limiti (demo)</h3>
+        <ul>
+          <li>Bonifico SEPA: di solito accredito entro 1 giorno lavorativo.</li>
+          <li>Carta: accredito in genere immediato dopo autorizzazione.</li>
+          <li>Crypto: dipende dalla rete e dalla conferma del gateway.</li>
+        </ul>
+      </div>
+
+      <div class="info-panel bank-card">
+        <h3>Sicurezza</h3>
+        <p>
+          Non condividere il numero conto con terzi. Verifica sempre l’importo prima di confermare.
+        </p>
+        <div class="info-note">Dopo il deposito, saldo e movimenti si aggiornano automaticamente navigando tra le pagine.</div>
+      </div>
+    </aside>
+  </div>
 </div>

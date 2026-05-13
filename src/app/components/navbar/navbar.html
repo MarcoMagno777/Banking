@@ -1,23 +1,48 @@
 <nav [class.open]="isMenuOpen()">
   <div class="navbar-header">
     <header>
-      <h2>Secure Banking</h2>
+      <div class="brand-lockup">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <div class="brand-text">
+          <h2>Secure Banking</h2>
+          <span class="brand-tag">Private</span>
+        </div>
+      </div>
     </header>
-    <button class="hamburger" (click)="toggleMenu()" [attr.aria-label]="isMenuOpen() ? 'Close menu' : 'Open menu'">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <div class="header-actions">
+      <button
+        type="button"
+        class="theme-toggle"
+        (click)="theme.toggle()"
+        [attr.aria-label]="theme.theme() === 'dark' ? 'Attiva tema chiaro' : 'Attiva tema scuro'"
+      >
+        @if (theme.theme() === 'dark') {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        }
+      </button>
+      <button class="hamburger" (click)="toggleMenu()" [attr.aria-label]="isMenuOpen() ? 'Chiudi menu' : 'Apri menu'">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
   </div>
   <ul>
-    <li><a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">Home Overview</a></li>
-    <li><a routerLink="/balance" routerLinkActive="active" (click)="closeMenu()">Account Balance</a></li>
-    <li><a routerLink="/convert-crypto" routerLinkActive="active" (click)="closeMenu()">Crypto Conversion</a></li>
-    <li><a routerLink="/convert-fiat" routerLinkActive="active" (click)="closeMenu()">Fiat Conversion</a></li>
-    <li><a routerLink="/deposit" routerLinkActive="active" (click)="closeMenu()">Deposit Funds</a></li>
-    <li><a routerLink="/transactions" routerLinkActive="active" (click)="closeMenu()">Transaction History</a></li>
-    <li><a routerLink="/withdrawals" routerLinkActive="active" (click)="closeMenu()">Withdrawals</a></li>
-    <li>
+    <li><a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">Panoramica</a></li>
+    <li><a routerLink="/balance" routerLinkActive="active" (click)="closeMenu()">Saldo</a></li>
+    <li><a routerLink="/convert-crypto" routerLinkActive="active" (click)="closeMenu()">Crypto</a></li>
+    <li><a routerLink="/convert-fiat" routerLinkActive="active" (click)="closeMenu()">Valute</a></li>
+    <li><a routerLink="/deposit" routerLinkActive="active" (click)="closeMenu()">Deposito</a></li>
+    <li><a routerLink="/transactions" routerLinkActive="active" (click)="closeMenu()">Movimenti</a></li>
+    <li><a routerLink="/withdrawals" routerLinkActive="active" (click)="closeMenu()">Prelievi</a></li>
+    <li class="logout-row">
       <app-logout-button (logout)="handleLogout()"></app-logout-button>
     </li>
   </ul>

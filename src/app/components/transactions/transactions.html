@@ -1,39 +1,56 @@
-<div class="form-container">
-  <h1>Storico Transazioni</h1>
-  <p>Filtra le tue transazioni.</p>
-  <form (ngSubmit)="onSubmit()" class="account-form">
-    <label for="filter">Filtro:</label>
-    <input
-      type="text"
-      id="filter"
-      [(ngModel)]="filter"
-      name="filter"
-      placeholder="Cerca per descrizione o tipo"
-    />
-    <button type="submit">Applica Filtro</button>
+<div class="bank-page tx-page">
+  <header class="bank-page-header">
+    <div>
+      <p class="bank-eyebrow">Storico</p>
+      <h1 class="bank-title">Movimenti</h1>
+      <p class="bank-subtitle">Filtra per descrizione o tipo. Tocca una riga per il dettaglio.</p>
+    </div>
+  </header>
+
+  <app-movements-chart
+    [transactions]="banking.getCachedTransactions()"
+    [currentBalance]="banking.getCachedAccount()?.balance ?? null"
+  />
+
+  <form (ngSubmit)="onSubmit()" class="filter-bar bank-card">
+    <label class="bank-label" for="filter">Cerca</label>
+    <div class="filter-row">
+      <input
+        class="bank-input"
+        type="text"
+        id="filter"
+        [(ngModel)]="filter"
+        name="filter"
+        placeholder="Descrizione o tipo"
+      />
+      <button type="submit" class="bank-btn">Applica</button>
+    </div>
   </form>
-  <div class="transactions-list">
-    <h2>Transazioni</h2>
+
+  <section class="tx-table bank-card">
+    <h2 class="sr-only">Elenco transazioni</h2>
     <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
     <ul>
-      <li 
-        *ngFor="let t of filteredTransactions"
+      <li
+        *ngFor="let t of filteredTransactions; let i = index"
         (click)="selectTransaction(t)"
         class="transaction-item"
         [class.positive]="t.amount > 0"
         [class.negative]="t.amount < 0"
+        [style.animation-delay]="(i * 35) + 'ms'"
       >
+        <div class="tx-icon" [class.in]="t.amount > 0" [class.out]="t.amount < 0"></div>
         <div class="transaction-info">
           <span class="date">{{ t.date }}</span>
-          <span class="description">{{ t.description }}</span>
-          <span class="status" [class]="t.status">{{ t.status }}</span>
+          <span class="description">{{ t.description || '—' }}</span>
+          <span class="status-pill" [class]="t.status">{{ t.status }}</span>
         </div>
         <span class="amount" [class.amount-positive]="t.amount > 0">
-          {{ t.amount > 0 ? '+' : '' }}€{{ getAbsAmount(t.amount) }}
+          {{ t.amount > 0 ? '+' : '' }}€{{ getAbsAmount(t.amount).toFixed(2) }}
         </span>
       </li>
     </ul>
-  </div>
+  </section>
 </div>
 
 <app-transaction-detail

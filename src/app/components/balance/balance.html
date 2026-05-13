@@ -1,15 +1,114 @@
-<div class="form-container">
-  <h1>Saldo Conto</h1>
-  <p>Il tuo saldo attuale è:</p>
-  <div class="balance-display" *ngIf="account; else emptyAccount">
-    <span class="balance-amount">€{{ account.balance.toFixed(2) }}</span>
-    <div class="total-info">
-      <span>Saldo totale: €{{ totalBalance() }}</span>
+<div class="bank-page balance-layout">
+  <header class="bank-page-header">
+    <div>
+      <p class="bank-eyebrow">Conto</p>
+      <h1 class="bank-title">Saldo e liquidità</h1>
+      <p class="bank-subtitle">
+        Panoramica del disponibile, sintesi dei movimenti e grafico entrate/uscite. I dati si
+        allineano con la home e lo storico quando navighi o tocchi aggiorna.
+      </p>
     </div>
+    <button type="button" class="bank-btn" (click)="refreshBalance()" [disabled]="isLoading">
+      {{ isLoading ? 'Aggiornamento…' : 'Aggiorna' }}
+    </button>
+  </header>
+
+  <div class="banner banner-top" *ngIf="statusMessage">{{ statusMessage }}</div>
+
+  <div class="balance-grid" *ngIf="account; else emptyAccount">
+    <div class="balance-main">
+      <div class="balance-hero bank-card">
+        <span class="pill">{{ account.currency }} · disponibile</span>
+        <p class="big">{{ account.balance.toFixed(2) }}</p>
+        <p class="sub">{{ accountDisplayName }} · conto #{{ banking.getCurrentAccountNumber() }}</p>
+        <div class="hero-strip">
+          <div>
+            <span class="strip-label">Entrate (storico)</span>
+            <span class="strip-value pos">+{{ totalIncome.toFixed(2) }} €</span>
+          </div>
+          <div>
+            <span class="strip-label">Uscite (storico)</span>
+            <span class="strip-value neg">-{{ totalExpenses.toFixed(2) }} €</span>
+          </div>
+        </div>
+      </div>
+
+      <app-movements-chart [transactions]="transactions" [currentBalance]="account.balance" />
+
+      <section class="recent-block bank-card">
+        <div class="recent-head">
+          <h2>Ultimi movimenti</h2>
+          <a routerLink="/transactions">Apri storico</a>
+        </div>
+        <ul class="mini-tx" *ngIf="recentMovements.length > 0; else noTx">
+          <li *ngFor="let tx of recentMovements">
+            <div>
+              <strong>{{ tx.description || 'Movimento' }}</strong>
+              <span>{{ tx.date }} · {{ tx.type }}</span>
+            </div>
+            <span [class.pos]="tx.amount > 0" [class.neg]="tx.amount < 0">
+              {{ tx.amount > 0 ? '+' : '' }}{{ absAmount(tx.amount).toFixed(2) }} €
+            </span>
+          </li>
+        </ul>
+        <ng-template #noTx>
+          <p class="muted-p">Nessun movimento in cache. Dopo un accesso o un deposito compariranno qui.</p>
+        </ng-template>
+      </section>
+    </div>
+
+    <aside class="balance-aside">
+      <div class="info-panel bank-card">
+        <h3>Dettaglio conto</h3>
+        <div class="info-stat">
+          <span>Tipo</span>
+          <strong>{{ account.type }}</strong>
+        </div>
+        <div class="info-stat">
+          <span>Valuta</span>
+          <strong>{{ account.currency }}</strong>
+        </div>
+        <div class="info-stat">
+          <span>Movimenti registrati</span>
+          <strong>{{ transactionCount }}</strong>
+        </div>
+        <div class="info-stat">
+          <span>Depositi / prelievi</span>
+          <strong>{{ depositCount }} / {{ withdrawalCount }}</strong>
+        </div>
+        <p class="iban-block"><span class="lbl">IBAN</span>{{ ibanLine }}</p>
+      </div>
+
+      <div class="info-panel bank-card">
+        <h3>Operazioni rapide</h3>
+        <p>Da qui puoi passare alle schermate per movimentare il conto.</p>
+        <div class="info-links">
+          <a routerLink="/deposit">Deposito</a>
+          <a routerLink="/withdrawals">Prelievo</a>
+          <a routerLink="/convert-fiat">Valute</a>
+          <a routerLink="/convert-crypto">Crypto</a>
+        </div>
+      </div>
+
+      <div class="info-panel bank-card tips">
+        <h3>Informazioni utili</h3>
+        <ul>
+          <li>Il saldo mostrato è quello restituito dall’API dopo l’ultimo sync.</li>
+          <li>Le commissioni di conto non sono simulate in questa demo.</li>
+          <li>Per dubbi su singole transazioni apri il dettaglio dallo storico.</li>
+        </ul>
+        <div class="info-note">
+          Suggerimento: dopo un bonifico in entrata, attendi qualche secondo e usa «Aggiorna» se il
+          saldo non si è ancora allineato.
+        </div>
+      </div>
+    </aside>
   </div>
+
   <ng-template #emptyAccount>
-    <p>Conto non trovato.</p>
+    <div class="balance-hero bank-card empty">
+      <p>Conto non disponibile. Effettua l’accesso dalla home o dal login.</p>
+      <a routerLink="/login" class="bank-btn login-cta">Vai al login</a>
+    </div>
   </ng-template>
-  <button (click)="refreshBalance()">Aggiorna Saldo</button>
-  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
 </div>

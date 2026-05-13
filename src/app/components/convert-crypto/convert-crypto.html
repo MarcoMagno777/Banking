@@ -1,34 +1,85 @@
-<div class="form-container">
-  <h1>Converti in Criptovaluta</h1>
-  <p>Inserisci l'importo, la descrizione e il tipo di criptovaluta.</p>
-  <form (ngSubmit)="onSubmit()" class="account-form">
-    <label for="description">Descrizione:</label>
-    <input
-      type="text"
-      id="description"
-      [(ngModel)]="description"
-      name="description"
-      placeholder="Es: Acquisto Bitcoin"
-    />
-    <label for="amount">Importo (€):</label>
-    <input
-      type="number"
-      id="amount"
-      [(ngModel)]="amount"
-      name="amount"
-      required
-      min="0.01"
-      step="0.01"
-      placeholder="Inserisci l'importo"
-    />
-    <label for="cryptoType">Tipo Cripto:</label>
-    <select id="cryptoType" [(ngModel)]="toCrypto" name="toCrypto">
-      <option value="BTC">Bitcoin (BTC)</option>
-      <option value="ETH">Ethereum (ETH)</option>
-      <option value="XRP">Ripple (XRP)</option>
-      <option value="LTC">Litecoin (LTC)</option>
-    </select>
-    <button type="submit" [disabled]="amount <= 0">Converti</button>
-  </form>
-  <div class="status-message" *ngIf="statusMessage">{{ statusMessage }}</div>
+<div class="bank-page crypto-page">
+  <header class="bank-page-header">
+    <div>
+      <p class="bank-eyebrow">Exchange</p>
+      <h1 class="bank-title">Conversione crypto</h1>
+      <p class="bank-subtitle">
+        Simula un cambio da euro verso la crypto scelta. Il grafico a destra è indicativo; il
+        risultato reale dipende dall’endpoint di conversione.
+      </p>
+    </div>
+  </header>
+
+  <div class="crypto-grid-ext">
+    <form (ngSubmit)="onSubmit()" class="crypto-form bank-card">
+      <h2 class="form-title">Nuova conversione</h2>
+      <label class="bank-label" for="description">Descrizione</label>
+      <input
+        class="bank-input"
+        type="text"
+        id="description"
+        [(ngModel)]="description"
+        name="description"
+        placeholder="Es. Acquisto BTC ricorrente"
+      />
+      <label class="bank-label" for="amount">Importo in euro (€)</label>
+      <input
+        class="bank-input"
+        type="number"
+        id="amount"
+        [(ngModel)]="amount"
+        name="amount"
+        required
+        min="0.01"
+        step="0.01"
+        placeholder="0.00"
+      />
+      <label class="bank-label" for="cryptoType">Asset di destinazione</label>
+      <select class="bank-select" id="cryptoType" [(ngModel)]="toCrypto" name="toCrypto">
+        <option value="BTC">Bitcoin (BTC)</option>
+        <option value="ETH">Ethereum (ETH)</option>
+        <option value="XRP">Ripple (XRP)</option>
+        <option value="LTC">Litecoin (LTC)</option>
+      </select>
+      <div class="estima" *ngIf="amount > 0">
+        <span>Stima locale (demo)</span>
+        <strong>≈ {{ convertedAmount.toFixed(6) }} {{ toCrypto }}</strong>
+        <small>Tasso UI {{ selectedCryptoRate }} — non vincolante</small>
+      </div>
+      <button type="submit" class="bank-btn full" [disabled]="amount <= 0 || isLoading">
+        {{ isLoading ? 'Elaborazione…' : 'Converti' }}
+      </button>
+      <div class="banner" *ngIf="statusMessage">{{ statusMessage }}</div>
+    </form>
+
+    <app-crypto-trend-chart [symbol]="toCrypto" />
+
+    <aside class="crypto-aside">
+      <div class="info-panel bank-card">
+        <h3>Saldo euro</h3>
+        <p class="bal-line" *ngIf="banking.getCachedAccount() as acc">
+          Disponibile: <strong>{{ acc.balance.toFixed(2) }} {{ acc.currency }}</strong>
+        </p>
+        <p *ngIf="!banking.getCachedAccount()">Accedi per vedere il saldo.</p>
+        <div class="info-links">
+          <a routerLink="/balance">Saldo</a>
+          <a routerLink="/transactions">Movimenti</a>
+        </div>
+      </div>
+      <div class="info-panel bank-card">
+        <h3>Volatilità</h3>
+        <p>
+          Le crypto possono muoversi rapidamente. Il grafico mostra una curva di riferimento per
+          l’asset selezionato, non un prezzo di mercato in tempo reale.
+        </p>
+      </div>
+      <div class="info-panel bank-card">
+        <h3>Commissioni (demo)</h3>
+        <ul>
+          <li>Spread simulato incluso nel tasso mostrato in app.</li>
+          <li>Nessun costo fisso aggiuntivo in questa versione.</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
 </div>

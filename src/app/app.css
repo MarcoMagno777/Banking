@@ -1,37 +1,33 @@
 .app-container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
+  background: transparent;
 }
 
 app-navbar {
-  width: 280px; /* Increased width */
-  /* Removed gray background and padding to let navbar.css handle it */
+  width: 268px;
+  min-width: 268px;
 }
 
 main {
   flex: 1;
-  padding: 1rem;
+  padding: 1.5rem 1.75rem 2.5rem;
   overflow-y: auto;
+  max-width: calc(100vw - 268px);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .app-container {
     flex-direction: column;
-    height: auto;
-    min-height: 100vh;
   }
 
   app-navbar {
     width: 100%;
-    height: auto;
-    border-radius: 0;
-    order: -1; /* Metti la navbar in alto */
+    min-width: auto;
   }
 
   main {
-    flex: 1;
-    padding: 1rem;
-    min-height: calc(100vh - auto);
+    max-width: none;
+    padding: 1rem 1.1rem 2rem;
   }
 }
